@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+#balloon-text {
+  animation: fadeIn 0.20s forwards, fadeOut 0.20s forwards 4.8s;
+}

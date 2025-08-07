@@ -1,0 +1,19 @@
+{
+  "name": "ssaidchanger",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.0.4"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "7.css": "^0.21.1",
+    "kernelsu": "^1.0.6"
+  }
+}

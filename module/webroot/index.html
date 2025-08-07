@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DeviceID/SSAID Changer</title>
+    <script type="module" crossorigin src="/assets/index-MkIl3vAk.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-MGIYxcvA.css">
+  </head>
+  <body class="win7">
+    <div class="z-1 fixed top-0 left-0 w-full h-full flex justify-center pt-16" id="dialog-div" hidden>
+      <dialog class="window active" open>
+          <div class="title-bar">
+            <div class="title-bar-text">DeviceID/SSAID Changer</div>
+            <div class="title-bar-controls">
+              <button aria-label="Close" id="dialog-close1"></button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div class="flex items-center gap-2 p-5 bg-white overflow-auto">
+              <img src="/assets/info-D7d72Xb-.ico" alt="Icon" class="w-10 h-10" />
+              <p id="dialog-msg">DeviceID/SSAID Changed Successfully</p>
+            </div>
+            <div class="flex justify-end px-3 py-3">
+              <button id="dialog-close2">Close</button>
+            </div>
+          </div>
+      </dialog>
+    </div>
+    <main class="min-h-screen relative overflow-auto text-base">
+      <div id="app" class="flex flex-col items-center p-4 sm:p-10 gap-5">
+        <div class="window active w-full max-w-lg">
+          <div class="title-bar">
+            <div class="title-bar-text">DeviceID/SSAID Changer</div>
+            <div class="title-bar-controls">
+              <button aria-label="Minimize"></button>
+              <button aria-label="Maximize"></button>
+              <button aria-label="Close"></button>
+            </div>
+          </div>
+          <div class="window-body">
+            <ul role="menubar">
+              <li role="menuitem" tabindex="0" aria-haspopup="true">
+                File
+                <ul role="menu">
+                  <li role="menuitem">
+                    <a id="backup-settings">
+                      Backup settings_ssaid.xml
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li role="menuitem" tabindex="0" aria-haspopup="true">
+                Help
+                <ul role="menu">
+                  <li role="menuitem"><a id="open-donate">Donate</a></li>
+                  <li role="menuitem"><a id="open-about">About</a></li>
+                </ul>
+              </li>
+            </ul>
+            <div class="flex flex-col items-start gap-2 w-full p-2">
+              <label for="app-pkg" class="whitespace-nowrap">App Package Name</label>
+              <select id="app-pkg" size="1" class="w-full max-w-xs">
+                <option value="">Select an app</option>
+              </select>
+              <label for="ssaid-value" class="whitespace-nowrap">DeviceID/SSAID</label>
+              <div class="raw flex-1 w-full">
+                <input id="ssaid-value" type="text" aria-describedby="balloon-text" class="w-full text-sm" />
+                <div role="tooltip" class="z-1 mt-4" id="balloon-text" hidden>Must be hexadecimal and exactly 16 characters in length.</div>
+              </div>
+              <div class="flex flex-row items-start sm:items-center gap-2 w-full">
+                <button id="randomize-ssaid" type="button" class="whitespace-nowrap">Randomize</button>
+                <button id="default-ssaid" type="button" class="whitespace-nowrap">Default Value</button>
+              </div>
+              <div class="flex flex-row items-start sm:items-center gap-2 w-full">
+                <button id="apply-ssaid" type="button" class="w-full sm:w-auto self-center">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="window active w-full max-w-lg sm:w-max" id="about-window" hidden>
+          <div class="title-bar">
+            <div class="title-bar-text">About</div>
+            <div class="title-bar-controls">
+              <button aria-label="Close" id="close-about"></button>
+            </div>
+          </div>
+          <div class="window-body has-space">
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg">DeviceID/SSAID Changer</p>
+              <p class="text-sm">Version 1.0.0</p>
+              <p class="text-sm text-center">A simple WebUI Module to change SSAID/DeviceID on Android devices.</p>
+              <p class="text-sm text-center">GNU Affero General Public License Version 3</p>
+              <p class="text-sm text-center">Wallpaper by <a target="_blank" onclick="ksu.exec(`am start -a android.intent.action.VIEW -d https://www.reddit.com/r/FrutigerAero/comments/1ayi7qp/frutiger_aero_wallpapers/`)">/u/Jackaboyishere1</a></p>
+              <p class="text-sm text-center">Styled using <a target="_blank" onclick="ksu.exec(`am start -a android.intent.action.VIEW -d https://khang-nd.github.io/7.css`)">7.css by khang-nd</a></p>
+              <p class="text-sm text-center">2025 sidex15</p>
+            </div>
+          </div>
+        </div>
+        <div class="window active w-full max-w-lg sm:w-max" id="donate-window" hidden>
+          <div class="title-bar">
+            <div class="title-bar-text">Donate</div>
+            <div class="title-bar-controls">
+              <button aria-label="Close" id="close-donate"></button>
+            </div>
+          </div>
+          <div class="window-body has-space">
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg">Buy me some coffee ☕</p>
+              <p class="text-sm text-center">PayPal: sidex15.official@gmail.com</p>
+              <p class="text-sm text-center">BTC: 1AVaRmoEivK94XRooqbbAgvzdTMA5cwGdc</p>
+              <p class="text-sm text-center">ETH (ERC20): 0xa52151ebd2718a00af9e1dfcacfb30e1d3a94860</p>
+              <p class="text-sm text-center">USDT (TRC20): TAUbxzug7cygExFunhFBiG6ntmbJwz7Skn</p>
+              <p class="text-sm text-center">USDT (ERC20): 0xa52151ebd2718a00af9e1dfcacfb30e1d3a94860</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
