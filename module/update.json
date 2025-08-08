@@ -2,5 +2,5 @@
     "version": "v1.1.0",
     "versionCode": 1000100,
     "zipUrl": "https://github.com/sidex15/deviceidchanger/releases/latest/download/DeviceID-Changer.zip",
-    "changelog": "https://raw.githubusercontent.com/sidex15/deviceidchanger/main/CHANGELOG.md"
+    "changelog": "https://raw.githubusercontent.com/sidex15/deviceidchanger/main/module/CHANGELOG.md"
 }
