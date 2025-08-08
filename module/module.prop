@@ -1,7 +1,7 @@
 id=deviceidchanger
 name=DeviceID/SSAID Changer
-version=v1.0.0
-versionCode=1000000
+version=v1.1.0
+versionCode=1000100
 author=sidex15
 description=A simple WebUI Module to change SSAID/DeviceID on Rooted Android Devices with Apatch, KSU (And its forks), or Magisk.
 updateJson=https://raw.githubusercontent.com/sidex15/deviceidchanger/main/update.json
