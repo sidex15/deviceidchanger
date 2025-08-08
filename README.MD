@@ -4,9 +4,11 @@
 A simple WebUI Module to change SSAID/DeviceID on Rooted Android Devices with Apatch, KSU (And its forks), or Magisk.
 
 ## Purpose of the module
-Some of the DeviceID Changer apps are paid or free but with ads. Also those apps might be flagged by some banking apps as malicious and it could cause root/malicious app detection to your banking app.
+Some banking apps are using your DeviceID/SSAID (`Settings.Secure.ANDROID_ID`) to ban you from using the app once root is detected in your device.
 
-This Module is designed to install as a module and use the WebUI for changing the DeviceID/SSAID. and since it's a module, you wouldn't worry about installing those apps that might cause detection to your banking app.
+The problem is that some of the DeviceID Changer apps are paid or free, but with ads. Also, those apps might be flagged by some banking apps as malicious, and it could cause root/malicious app detection in your banking app.
+
+This Module is designed to install as a module and use the WebUI for changing the DeviceID/SSAID. And since it's a module, you wouldn't worry about installing those apps that might cause detection by your banking app.
 
 <b>And it's FOSS!</b>
 
@@ -22,5 +24,4 @@ PayPal: `sidex15.official@gmail.com`
 <br>BTC: `1AVaRmoEivK94XRooqbbAgvzdTMA5cwGdc`
 <br>ETH (ERC20): `0xa52151ebd2718a00af9e1dfcacfb30e1d3a94860`
 <br>USDT (TRC20): `TAUbxzug7cygExFunhFBiG6ntmbJwz7Skn`
-<br>USDT (ERC20): 
-`0xa52151ebd2718a00af9e1dfcacfb30e1d3a94860`
+<br>USDT (ERC20): `0xa52151ebd2718a00af9e1dfcacfb30e1d3a94860`
