@@ -54,16 +54,6 @@ function getRandomArbitrary(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-// Path to the settings_ssaid.xml file
-const ssaidlocation = '/data/system/users/0/settings_ssaid.xml';
-const backup_ssaidlocation = '/data/adb/modules/deviceidchanger/settings_ssaid.xml';
-
-// Your XML data as a string
-const xmlData = await run(`cat ${ssaidlocation}`);
-
-// Parse the XML and convert to JavaScript object
-const settingsObject = parseSettingsXmlToObject(xmlData.toString());
-console.log('Parsed settings:', settingsObject);
 
 // Set a random background image from the specified range
 const bg_body = document.querySelector('body');
@@ -83,6 +73,27 @@ bg_body.style.backgroundRepeat = 'no-repeat';
 bg_body.style.backgroundAttachment = 'fixed';
 bg_body.style.backgroundSize = 'cover';
 bg_body.style.backgroundPosition = 'center';
+
+// Path to the settings_ssaid.xml file
+const moddir = '/data/adb/modules/deviceidchanger';
+const ssaidlocation = '/data/system/users/0/settings_ssaid.xml';
+const abx_ssaidlocation = `${moddir}/tmp/settings_ssaid.xml`;
+const backup_ssaidlocation = `/sdcard/settings_ssaid.xml`;
+const arch = await run(`uname -m`);
+
+// Check if the file is ABX or not
+const ssaidfilecheck = await run(`file ${ssaidlocation}`);
+console.log(`SSAID file check result: ${ssaidfilecheck}`);
+const isnotABX = ssaidfilecheck.includes(`ASCII text`) ? true : false;
+console.log(`Is SSAID file ABX: ${isnotABX}`);
+
+// Your XML data as a string
+const xmlData = isnotABX ? await run(`cat ${ssaidlocation}`) : await run(`abx2xml ${ssaidlocation} ${abx_ssaidlocation}; cat ${abx_ssaidlocation}`);
+console.log(`XML data loaded from: ${isnotABX ? ssaidlocation : abx_ssaidlocation}`);
+
+// Parse the XML and convert to JavaScript object
+const settingsObject = parseSettingsXmlToObject(xmlData.toString());
+console.log('Parsed settings:', settingsObject);
 
 var isssaidChangeSuccess = false;
 
@@ -141,7 +152,13 @@ async function mainSSAIDChange() {
     var selectedPackageName = select.options[select.selectedIndex].textContent;
     if (Boolean(selectedPackage.match(/^[0-9a-f]+$/i)) && selectedPackage.length == 16) {
       console.log(`Applying SSAID: ${selectedPackage} for package: ${selectedPackageName}`);
-      await run(`sed -i 's/value=\"${settingsObject[selectedPackageName].ssaid}\"/value=\"${selectedPackage}\"/' ${ssaidlocation}`);
+      if (isnotABX) {
+        await run(`sed -i 's/value=\"${settingsObject[selectedPackageName].ssaid}\"/value=\"${selectedPackage}\"/' ${ssaidlocation}`);
+      }
+      else {
+        await run(`sed -i 's/value="${settingsObject[selectedPackageName].ssaid}"/value="${selectedPackage}"/' ${abx_ssaidlocation}`);
+        await run(`xml2abx ${abx_ssaidlocation} ${ssaidlocation}`);
+      }
       await run(`chmod 600 ${ssaidlocation}`);
       settingsObject[selectedPackageName].ssaid = selectedPackage;
       dialog_msg.innerHTML = `SSAID for <b>${selectedPackageName}</b> changed to <b>${selectedPackage}</b>`;
