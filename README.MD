@@ -15,6 +15,9 @@ This Module is designed to install as a module and use the WebUI for changing th
 ## For Magisk Users
 Use [KSU WebUI Standalone app by 5ec1cff](https://github.com/5ec1cff/KsuWebUIStandalone) or [MMRL](https://github.com/MMRLApp/MMRL)
 
+## WebUI Not working?
+[Update your Android System WebView To latest version](https://play.google.com/store/apps/details?id=com.google.android.webview). if it's still not working, try to submit a github issue
+
 ## Credits
 * [7.css by khang-nd](https://khang-nd.github.io/7.css)
 * [Frutiger Aero Wallpaper by /u/Jackaboyishere1](https://www.reddit.com/r/FrutigerAero/comments/1ayi7qp/frutiger_aero_wallpapers/)
@@ -25,3 +28,4 @@ PayPal: `sidex15.official@gmail.com`
 <br>ETH (ERC20): `0xa52151ebd2718a00af9e1dfcacfb30e1d3a94860`
 <br>USDT (TRC20): `TAUbxzug7cygExFunhFBiG6ntmbJwz7Skn`
 <br>USDT (ERC20): `0xa52151ebd2718a00af9e1dfcacfb30e1d3a94860`
+
