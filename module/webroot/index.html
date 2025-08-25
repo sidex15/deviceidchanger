@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>DeviceID/SSAID Changer</title>
-    <script type="module" crossorigin src="/assets/index-h5L3kRIX.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DvPPf829.css">
+    <script type="module" crossorigin src="/assets/index-CrnA7mdO.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CFgh6YIA.css">
   </head>
   <body class="win7">
     <div class="z-1 fixed top-0 left-0 w-full h-full flex justify-center pt-16" id="dialog-div" hidden>
@@ -58,8 +58,14 @@
                 </ul>
               </li>
             </ul>
-            <div class="flex flex-col items-start gap-2 w-full p-2">
-              <label for="app-pkg" class="whitespace-nowrap">App Package Name</label>
+            <div class="flex flex-col gap-2 w-full p-2">
+			  <div class="field-row w-full items-center">
+				<label for="app-pkg" class="m-0 leading-6">App Package Name</label>
+				<div class="ml-auto flex items-center gap-2">
+				  <label for="uid-select" class="m-0 leading-6 opacity-80">User</label>
+				  <select id="uid-select" class="h-6 min-w-[80px]"></select>
+				</div>
+			  </div>
               <select id="app-pkg" size="1" class="w-full max-w-xs">
                 <option value="">Select an app</option>
               </select>

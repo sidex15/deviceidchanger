@@ -54,6 +54,20 @@ function getRandomArbitrary(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
+// Persisted target user id (default "0")
+function targetUid() {
+	return localStorage.getItem('ssa_uid') || '0';
+}
+function setTargetUid(u) {
+	localStorage.setItem('ssa_uid', String(u));
+}
+
+// Discover user IDs (e.g. 0,10,11)
+async function listUsers() {
+  const out = await run('cmd user list');
+  return [...out.matchAll(/UserInfo\{(\d+):/g)].map(m=>m[1]).sort();
+}
+
 
 // Set a random background image from the specified range
 const bg_body = document.querySelector('body');
@@ -76,8 +90,8 @@ bg_body.style.backgroundPosition = 'center';
 
 // Path to the settings_ssaid.xml file
 const moddir = '/data/adb/modules/deviceidchanger';
-const ssaidlocation = '/data/system/users/0/settings_ssaid.xml';
-const abx_ssaidlocation = `${moddir}/tmp/settings_ssaid.xml`;
+const ssaidlocation = `/data/system/users/${targetUid()}/settings_ssaid.xml`;
+const abx_ssaidlocation = `${moddir}/tmp/settings_ssaid.u${targetUid()}.xml`;
 const backup_ssaidlocation = `/sdcard/settings_ssaid.xml`;
 const arch = await run(`uname -m`);
 
@@ -98,6 +112,7 @@ console.log('Parsed settings:', settingsObject);
 var isssaidChangeSuccess = false;
 
 async function mainSSAIDChange() {
+  const uidSel = document.getElementById('uid-select');
   const select = document.getElementById('app-pkg');
   var ssaid_value = document.getElementById('ssaid-value');
   const balloon = document.getElementById('balloon-text');
@@ -116,6 +131,15 @@ async function mainSSAIDChange() {
   const open_donate = document.getElementById('open-donate');
   const close_donate = document.getElementById('close-donate');
   var current_packagename = '';
+  
+  const uids = await listUsers();
+  uids.forEach(u => {
+    const o = document.createElement('option');
+    o.value = o.textContent = u;
+    if (u === targetUid()) o.selected = true;
+    uidSel.appendChild(o);
+  });
+  uidSel.addEventListener('change', e => { setTargetUid(e.target.value); location.reload(); });
 
   for (const [packageName, { ssaid }] of Object.entries(settingsObject)) {
     const option = document.createElement('option');
