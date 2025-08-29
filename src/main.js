@@ -90,26 +90,80 @@ bg_body.style.backgroundPosition = 'center';
 
 // Path to the settings_ssaid.xml file
 const moddir = '/data/adb/modules/deviceidchanger';
-const ssaidlocation = `/data/system/users/${targetUid()}/settings_ssaid.xml`;
-const abx_ssaidlocation = `${moddir}/tmp/settings_ssaid.u${targetUid()}.xml`;
 const backup_ssaidlocation = `/sdcard/settings_ssaid.xml`;
 const arch = await run(`uname -m`);
 
-// Check if the file is ABX or not
-const ssaidfilecheck = await run(`file ${ssaidlocation}`);
-console.log(`SSAID file check result: ${ssaidfilecheck}`);
-const isnotABX = ssaidfilecheck.includes(`ASCII text`) ? true : false;
-console.log(`Is SSAID file ABX: ${isnotABX}`);
+// Function to load settings for a specific UID
+async function loadSettingsForUid(uid) {
+  const currentSsaidLocation = `/data/system/users/${uid}/settings_ssaid.xml`;
+  const currentAbxSsaidLocation = `${moddir}/tmp/settings_ssaid.u${uid}.xml`;
+  
+  // Check if the file is ABX or not
+  const ssaidfilecheck = await run(`file ${currentSsaidLocation}`);
+  console.log(`SSAID file check result for UID ${uid}: ${ssaidfilecheck}`);
+  const isnotABX = ssaidfilecheck.includes(`ASCII text`) ? true : false;
+  console.log(`Is SSAID file ABX for UID ${uid}: ${isnotABX}`);
 
-// Your XML data as a string
-const xmlData = isnotABX ? await run(`cat ${ssaidlocation}`) : await run(`abx2xml ${ssaidlocation} ${abx_ssaidlocation}; cat ${abx_ssaidlocation}`);
-console.log(`XML data loaded from: ${isnotABX ? ssaidlocation : abx_ssaidlocation}`);
+  // Your XML data as a string
+  const xmlData = isnotABX ? await run(`cat ${currentSsaidLocation}`) : await run(`abx2xml ${currentSsaidLocation} ${currentAbxSsaidLocation}; cat ${currentAbxSsaidLocation}`);
+  console.log(`XML data loaded from: ${isnotABX ? currentSsaidLocation : currentAbxSsaidLocation}`);
 
-// Parse the XML and convert to JavaScript object
-const settingsObject = parseSettingsXmlToObject(xmlData.toString());
-console.log('Parsed settings:', settingsObject);
+  // Parse the XML and convert to JavaScript object
+  const settingsObject = parseSettingsXmlToObject(xmlData.toString());
+  console.log('Parsed settings for UID', uid, ':', settingsObject);
+  
+  return { settingsObject, isnotABX, currentSsaidLocation, currentAbxSsaidLocation };
+}
+
+// Load initial settings
+let { settingsObject, isnotABX, currentSsaidLocation, currentAbxSsaidLocation } = await loadSettingsForUid(targetUid());
+let ssaidlocation = currentSsaidLocation;
+let abx_ssaidlocation = currentAbxSsaidLocation;
 
 var isssaidChangeSuccess = false;
+
+// Function to populate the app package dropdown
+function populateAppDropdown(select, settingsObj) {
+  // Clear existing options except the first default option
+  while (select.children.length > 1) {
+    select.removeChild(select.lastChild);
+  }
+  
+  for (const [packageName, { ssaid }] of Object.entries(settingsObj)) {
+    if (packageName === 'android') {
+      continue; // Skip the 'android' package as it is not an app
+    }
+    const option = document.createElement('option');
+    option.value = ssaid;
+    option.textContent = packageName; // Display package name in the dropdown
+    select.appendChild(option);
+  }
+}
+
+// Function to update settings when UID changes
+async function updateSettingsForUid(uid, select, ssaidValueInput, currentPackageNameRef) {
+  try {
+    const result = await loadSettingsForUid(uid);
+    
+    // Update global variables
+    settingsObject = result.settingsObject;
+    isnotABX = result.isnotABX;
+    ssaidlocation = result.currentSsaidLocation;
+    abx_ssaidlocation = result.currentAbxSsaidLocation;
+    
+    // Update the dropdown menu
+    populateAppDropdown(select, settingsObject);
+    
+    // Clear the SSAID value input and reset current package name
+    ssaidValueInput.value = '';
+    currentPackageNameRef.value = '';
+    
+    console.log(`Successfully updated settings for UID: ${uid}`);
+  } catch (error) {
+    console.error(`Error updating settings for UID ${uid}:`, error);
+    toast(`Error loading settings for UID ${uid}: ${error.message}`);
+  }
+}
 
 async function mainSSAIDChange() {
   const uidSel = document.getElementById('uid-select');
@@ -130,26 +184,24 @@ async function mainSSAIDChange() {
   const donate_window = document.getElementById('donate-window');
   const open_donate = document.getElementById('open-donate');
   const close_donate = document.getElementById('close-donate');
-  var current_packagename = '';
+  var currentPackageNameRef = { value: '' }; // Use object to allow reference passing
   
   const uids = await listUsers();
-  uids.forEach(u => {
-    const o = document.createElement('option');
-    o.value = o.textContent = u;
-    if (u === targetUid()) o.selected = true;
-    uidSel.appendChild(o);
-  });
-  uidSel.addEventListener('change', e => { setTargetUid(e.target.value); location.reload(); });
-
-  for (const [packageName, { ssaid }] of Object.entries(settingsObject)) {
+  uids.forEach(uid => {
     const option = document.createElement('option');
-    option.value = ssaid;
-    option.textContent = packageName; // Display package name in the dropdown
-    if (packageName === 'android') {
-      continue; // Skip the 'android' package as it is not an app
-    }
-    select.appendChild(option);
-  }
+    option.value = option.textContent = uid;
+    if (uid === targetUid()) option.selected = true;
+    uidSel.appendChild(option);
+  });
+  
+  // Update UID change event listener to avoid location.reload()
+  uidSel.addEventListener('change', async (e) => { 
+    setTargetUid(e.target.value); 
+    await updateSettingsForUid(e.target.value, select, ssaid_value, currentPackageNameRef);
+  });
+
+  // Initial population of the app dropdown
+  populateAppDropdown(select, settingsObject);
 
   select.addEventListener('click', (event) => {
     event.preventDefault();
@@ -160,7 +212,7 @@ async function mainSSAIDChange() {
     var selectedPackageName = event.target.options[event.target.selectedIndex].textContent;
     console.log(selectedPackageName, ': ', selectedPackage);
     ssaid_value.value = selectedPackage;
-    current_packagename = selectedPackageName;
+    currentPackageNameRef.value = selectedPackageName;
   });
 
   randomize_ssaid.addEventListener('click', () => {
@@ -168,7 +220,9 @@ async function mainSSAIDChange() {
   });
 
   default_ssaid.addEventListener('click', () => {
-    ssaid_value.value = settingsObject[current_packagename].defaultValue;
+    if (currentPackageNameRef.value && settingsObject[currentPackageNameRef.value]) {
+      ssaid_value.value = settingsObject[currentPackageNameRef.value].defaultValue;
+    }
   });
 
   apply_ssaid.addEventListener('click', async () => {
