@@ -18,6 +18,10 @@ Use [KSU WebUI Standalone app by 5ec1cff](https://github.com/5ec1cff/KsuWebUISta
 ## WebUI Not working?
 [Update your Android System WebView To latest version](https://play.google.com/store/apps/details?id=com.google.android.webview). if it's still not working, try to submit a github issue
 
+## TempRoot/Exploit-based Root Notice
+Since I don't have a device that's currently using TempRoot/Exploit-based Root (I'm still currently using LG V50 and LG V50s), It's uncertain if this module fully works on that kind of environment.
+If you insist on testing or using this module, I am not responsible for the consequences you cause.
+
 ## Credits
 * [7.css by khang-nd](https://khang-nd.github.io/7.css)
 * [Frutiger Aero Wallpaper by /u/Jackaboyishere1](https://www.reddit.com/r/FrutigerAero/comments/1ayi7qp/frutiger_aero_wallpapers/)
